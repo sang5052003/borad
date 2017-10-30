@@ -58,6 +58,15 @@
 			<artifactId>metaworks4</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas -->
+		<dependency>
+			<groupId>org.springframework.hateoas</groupId>
+			<artifactId>spring-hateoas</artifactId>
+			<version>0.23.0.RELEASE</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
