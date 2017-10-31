@@ -54,6 +54,7 @@
     },
     data: () => ({
       msg: "paMsg",
+      board: [],
       nutrition: [
         {
           dessert: 'Frozen yogurt',
@@ -94,13 +95,13 @@
     }),
     methods: {
       onSelect: function () {
-        
+
       },
       onSort: function () {
-        
+
       },
       onPagination: function () {
-        
+
       }
     }
   }

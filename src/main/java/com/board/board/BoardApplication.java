@@ -16,12 +16,11 @@ public class BoardApplication implements CommandLineRunner {
 
 		// 초기 데이터
 		// save a couple of customers
-		repository.save(new Person("Jack", "Bauer"));
-		repository.save(new Person("Chloe", "O'Brian"));
-		repository.save(new Person("Kim", "Bauer"));
-		repository.save(new Person("David", "Palmer"));
-		repository.save(new Person("Michelle", "Dessler"));
-
+		repository.save(new Person("Jack", "Bauer", "test1"));
+		repository.save(new Person("Chloe", "O'Brian", "test2"));
+		repository.save(new Person("Kim", "Bauer", "test3"));
+		repository.save(new Person("David", "Palmer", "test4"));
+		repository.save(new Person("Michelle", "Dessler", "test5"));
 	}
 
 	public static void main(String[] args) {
