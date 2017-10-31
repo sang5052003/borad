@@ -11,24 +11,21 @@
         </md-button>
       </md-toolbar>
 
-      <md-table md-sort="dessert" md-sort-type="desc" @select="onSelect" @sort="onSort">
+      <md-table md-sort="id" md-sort-type="desc" @select="onSelect" @sort="onSort">
         <md-table-header>
           <md-table-row>
-            <md-table-head md-sort-by="dessert">Dessert (100g serving)</md-table-head>
-            <md-table-head md-sort-by="calories" md-numeric md-tooltip="The total amount of food energy and the given serving size">Calories (g)</md-table-head>
-            <md-table-head md-sort-by="fat" md-numeric>Fat (g)</md-table-head>
-            <md-table-head>
-              <md-icon>message</md-icon>
-              <span>Comments</span>
-            </md-table-head>
+            <md-table-head md-sort-by="title" :md-numeric="false">Title</md-table-head>
+            <md-table-head md-sort-by="contents" :md-numeric="false" md-tooltip="The total amount of food energy and the given serving size">Contents</md-table-head>
+            <md-table-head md-sort-by="id" :mdNumeric="false">ID</md-table-head>
           </md-table-row>
         </md-table-header>
 
         <md-table-body>
-          <md-table-row v-for="(row, rowIndex) in nutrition" :key="rowIndex" :md-item="row" md-auto-select md-selection>
-            <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex" :md-numeric="columnIndex !== 'dessert' && columnIndex !== 'comment'" v-if="columnIndex !== 'type'">
+          <md-table-row v-for="(row, rowIndex) in posts" :key="rowIndex" :md-item="row" :md-auto-select="true" :md-selection="false" >
+            <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex" :md-numeric="false" v-if="columnIndex !== '_links'" @click.native="itemSelect(row._links)">
               {{ column }}
             </md-table-cell>
+            <md-table-cell><md-button class="md-primary">Primary</md-button></md-table-cell>
           </md-table-row>
         </md-table-body>
       </md-table>
@@ -46,65 +43,48 @@
 
 <script>
   import ChildComponent from './ChildComponent.vue'
+  import MdTableCell from "../../node_modules/vue-material/src/components/mdTable/mdTableCell.vue";
 
-  export default {
+export default {
     name: 'Main',
     components: {
+      MdTableCell,
       ChildComponent
     },
     data: () => ({
       msg: "paMsg",
       board: [],
-      nutrition: [
-        {
-          dessert: 'Frozen yogurt',
-          type: 'ice_cream',
-          calories: '159',
-          fat: '6.0',
-          comment: 'Icy'
-        },
-        {
-          dessert: 'Ice cream sandwich',
-          type: 'ice_cream',
-          calories: '237',
-          fat: '9.0',
-          comment: 'Super Tasty'
-        },
-        {
-          dessert: 'Eclair',
-          type: 'pastry',
-          calories: '262',
-          fat: '16.0',
-          comment: ''
-        },
-        {
-          dessert: 'Cupcake',
-          type: 'pastry',
-          calories: '305',
-          fat: '3.7',
-          comment: ''
-        },
-        {
-          dessert: 'Gingerbread',
-          type: 'other',
-          calories: '356',
-          fat: '16.0',
-          comment: ''
-        }
-      ],
+      posts: []
     }),
+    created: function () {
+      var xhr = new XMLHttpRequest()
+
+      var self = this
+
+      xhr.open('GET', 'http://localhost:8080/post')
+      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+      xhr.onload = function () {
+        self.posts = JSON.parse(xhr.responseText)._embedded.posts
+      }
+      xhr.send()
+
+    },
     methods: {
       onSelect: function () {
-
+        console.log('sel')
       },
       onSort: function () {
 
       },
       onPagination: function () {
 
+      },
+      itemSelect: function (e) {
+        console.log(e)
       }
+
     }
-  }
+  };
 
 </script>
 
@@ -128,5 +108,9 @@ li {
 
 a {
   color: #42b983;
+}
+
+md-table-head {
+  text-align: center;
 }
 </style>
