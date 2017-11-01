@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!--<detail-post></detail-post>-->
 
     <router-view/>
   </div>

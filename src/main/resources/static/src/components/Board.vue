@@ -1,14 +1,17 @@
 <template>
     <md-table-card>
       <md-toolbar>
-        <h1 class="md-title">Nutrition</h1>
-        <md-button class="md-icon-button">
-          <md-icon>filter_list</md-icon>
-        </md-button>
+        <h1 class="md-title">{{msg}}</h1>
+        <!--<md-button class="md-icon-button">-->
+          <!--<md-icon>filter_list</md-icon>-->
+        <!--</md-button>-->
 
         <md-button class="md-icon-button">
           <md-icon>search</md-icon>
         </md-button>
+
+        <write-form></write-form>
+
       </md-toolbar>
 
       <md-table md-sort="id" md-sort-type="desc" @select="onSelect" @sort="onSort">
@@ -44,15 +47,19 @@
 <script>
   import ChildComponent from './ChildComponent.vue'
   import MdTableCell from "../../node_modules/vue-material/src/components/mdTable/mdTableCell.vue";
+  import MdButton from "../../node_modules/vue-material/src/components/mdButton/mdButton.vue";
+  import WriteForm from "./WriteForm.vue"
 
 export default {
     name: 'Main',
     components: {
+      MdButton,
       MdTableCell,
-      ChildComponent
+      ChildComponent,
+      WriteForm
     },
     data: () => ({
-      msg: "paMsg",
+      msg: "Board",
       board: [],
       posts: []
     }),
@@ -80,7 +87,16 @@ export default {
 
       },
       itemSelect: function (e) {
-        console.log(e)
+        var self = this
+        var path = e.post.href
+        path = path.charAt(path.length - 1)
+        self.$router.push({
+          path: 'post/id/' + path
+//          path: self.$route.query.redirect
+        })
+      },
+      write: function () {
+
       }
 
     }
@@ -110,7 +126,10 @@ a {
   color: #42b983;
 }
 
-md-table-head {
+.btn {
+  font-weight: normal;
+  font-size: x-small;
   text-align: center;
 }
+
 </style>

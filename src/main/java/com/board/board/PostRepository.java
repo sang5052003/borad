@@ -9,5 +9,7 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "posts", path = "post")
 public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 
+//    List<Post> findAllBy();
     List<Post> findByTitle(@Param("title") String title);
+    Post findById(@Param("id") Long id);
 }
