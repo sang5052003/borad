@@ -10,7 +10,7 @@
           <md-icon>search</md-icon>
         </md-button>
 
-        <write-form></write-form>
+        <write-form @refreshBoard="initList"></write-form>
 
       </md-toolbar>
 
@@ -64,17 +64,8 @@ export default {
       posts: []
     }),
     created: function () {
-      var xhr = new XMLHttpRequest()
-
       var self = this
-
-      xhr.open('GET', 'http://localhost:8080/post')
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
-      xhr.onload = function () {
-        self.posts = JSON.parse(xhr.responseText)._embedded.posts
-      }
-      xhr.send()
-
+      self.initList()
     },
     methods: {
       onSelect: function () {
@@ -97,6 +88,18 @@ export default {
       },
       write: function () {
 
+      },
+      initList: function () {
+        var xhr = new XMLHttpRequest()
+
+        var self = this
+
+        xhr.open('GET', 'http://localhost:8080/post')
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+        xhr.onload = function () {
+          self.posts = JSON.parse(xhr.responseText)._embedded.posts
+        }
+        xhr.send()
       }
 
     }

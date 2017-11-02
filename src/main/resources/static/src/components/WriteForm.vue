@@ -1,13 +1,17 @@
 <template>
   <div>
   <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
-    <md-dialog-title>Create new note</md-dialog-title>
+    <md-dialog-title>Create new write</md-dialog-title>
 
     <md-dialog-content>
       <form>
         <md-input-container>
-          <label>Note</label>
-          <md-textarea></md-textarea>
+          <label>title</label>
+          <md-input v-model="title"></md-input>
+        </md-input-container>
+        <md-input-container>
+          <label>contents</label>
+          <md-textarea v-model="contents"></md-textarea>
         </md-input-container>
       </form>
     </md-dialog-content>
@@ -27,6 +31,11 @@
 <script>
   export default {
     name: 'writeform',
+    data: () => ({
+//      form: {title: String, contents: String}
+      title: '',
+      contents: ''
+    }),
     methods: {
       openDialog(ref) {
         this.$refs[ref].open();
@@ -46,20 +55,25 @@
         xhr.open('POST', "http://localhost:8080/post/write");
         xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 
-        var jsonData = JSON.stringify({title:"new title", contents:"new con", authorId:"auid"})
+        console.log('check')
+        console.log(self.title)
+        console.log(self.contents)
+
+        var jsonData = JSON.stringify({title: self.title, contents: self.contents, authorId: "auid"})
 
 //        console.log(jsonData)
 
         xhr.onload = function () {
           //refresh.
-          self.$router.push({
-            path: '/'
-          })
+//          self.$router.push({
+//            path: '/'
+//          })
+          self.$emit('refreshBoard')
           console.log('post onload')
         }
         xhr.send(jsonData)
 
-
+        this.closeDialog(ref)
       }
     }
   };

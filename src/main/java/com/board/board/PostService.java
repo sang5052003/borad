@@ -52,6 +52,6 @@ public class PostService {
         String contents = map.get("contents");
         String authorId = map.get("authorId");
 
-        postRepository.save(new Post("title","contents","authorId"));
+        postRepository.save(new Post(title, contents, authorId));
     }
 }
