@@ -5,6 +5,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import javax.validation.constraints.Max;
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 public class BoardApplication implements CommandLineRunner {
 
@@ -25,7 +29,11 @@ public class BoardApplication implements CommandLineRunner {
 		repository.save(new Person("David", "Palmer", "test4"));
 		repository.save(new Person("Michelle", "Dessler", "test5"));
 
-		postRepository.save(new Post("title1", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
+		List<String> reply = new ArrayList<>();
+		for(int i = 0; i < 5; i++){
+			reply.add("reply" + i);
+		}
+		postRepository.save(new Post("title1", "ㅁ;ㅣ아럼;이ㅏ러", "test1", reply));
 		postRepository.save(new Post("title2", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
 		postRepository.save(new Post("title3", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
 		postRepository.save(new Post("title4", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));

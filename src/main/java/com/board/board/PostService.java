@@ -41,6 +41,30 @@ public class PostService {
         return post;
     }
 
+    @RequestMapping(value = "/post/put", method = RequestMethod.PUT)
+    public Post putPostById(@RequestBody String jsonData) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> map = new HashMap<>();
+        map = mapper.readValue(jsonData, new TypeReference<Map<String, String>>(){});
+
+        String title = map.get("title");
+        String contents = map.get("contents");
+        String id = map.get("id");
+
+        //find data for update
+        Long idL = Long.parseLong(id);
+        Post post = postRepository.findOne(idL);
+
+        //update data
+        post.title = title;
+        post.contents = contents;
+
+        postRepository.save(post); //same id exist, but no need to delete(auto upgraded..maybe)
+
+        return post;
+    }
+
     @RequestMapping(value = "/post/write", method = RequestMethod.POST)
     public void postPost(@RequestBody String jsonData) throws IOException {
 
@@ -54,4 +78,12 @@ public class PostService {
 
         postRepository.save(new Post(title, contents, authorId));
     }
+
+//    @RequestMapping(value = "/post/remove", method = RequestMethod.DELETE)
+//    public void postDelete(@RequestBody PostWrapper postIds){
+//
+//        for(String id : postIds.postIdList){
+//            postRepository.delete(Long.parseLong(id));
+//        }
+//    }
 }

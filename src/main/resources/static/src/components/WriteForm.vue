@@ -55,10 +55,6 @@
         xhr.open('POST', "http://localhost:8080/post/write");
         xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 
-        console.log('check')
-        console.log(self.title)
-        console.log(self.contents)
-
         var jsonData = JSON.stringify({title: self.title, contents: self.contents, authorId: "auid"})
 
 //        console.log(jsonData)
@@ -69,7 +65,6 @@
 //            path: '/'
 //          })
           self.$emit('refreshBoard')
-          console.log('post onload')
         }
         xhr.send(jsonData)
 
