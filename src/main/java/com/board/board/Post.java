@@ -2,7 +2,6 @@ package com.board.board;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 public class Post {
@@ -19,7 +18,7 @@ public class Post {
         this.authorId = authorId;
     }
 
-    public Post(String title, String contents, String authorId, List<String> reply) {
+    public Post(String title, String contents, String authorId, Collection<String> reply) {
         this.title = title;
         this.contents = contents;
         this.authorId = authorId;
@@ -37,7 +36,7 @@ public class Post {
         return reply;
     }
 
-    public void setReply(List<String> reply) {
+    public void setReply(Collection<String> reply) {
         this.reply = reply;
     }
 

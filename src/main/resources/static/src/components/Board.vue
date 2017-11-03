@@ -30,10 +30,10 @@
       </md-table-header>
 
       <md-table-body>
-        <md-table-row v-for="(row, rowIndex) in posts" :key="rowIndex" :md-item="row" :md-auto-select="true"
+        <md-table-row v-for="(row, rowIndex) in pagePost" :key="rowIndex" :md-item="row" :md-auto-select="true"
                       :md-selection="true">
           <md-table-cell v-for="(column, columnIndex) in row" :key="columnIndex" :md-numeric="false"
-                         v-if="columnIndex !== '_links'" @click.native="itemSelect(row._links)">
+                         v-if="columnIndex !== '_links' && columnIndex !== 'reply'" @click.native="itemSelect(row._links)">
             {{ column }}
           </md-table-cell>
 
@@ -42,13 +42,14 @@
     </md-table>
 
     <md-table-pagination
-      md-size="5"
-      md-total="10"
-      md-page="1"
-      md-label="Rows"
-      md-separator="of"
+      :md-size="page.size"
+      :md-total="page.total"
+      :md-page="page.page"
+      :md-label="page.label"
+      :md-separator="page.separator"
       :md-page-options="[5, 10, 25, 50]"
-      @pagination="onPagination"></md-table-pagination>
+      @pagination="onPagination"
+      ></md-table-pagination>
   </md-table-card>
 </template>
 
@@ -72,7 +73,15 @@
       posts: [],
       checked: null,
       checkList: [],
-      postIds: []
+      postIds: [],
+      pagePost: [],
+      page: {
+        size: "5",
+        total: "10",
+        page: "1",
+        label: "Rows",
+        separator: "of" //?
+      }
     }),
     created: function () {
       var self = this
@@ -82,13 +91,23 @@
       onSelect: function (row) {
         var self = this
         self.checkList = row
-        console.log(self.checkList)
       },
       onSort: function () {
 
       },
-      onPagination: function () {
+      onPagination: function (page) {
+        var self = this
+        self.page.size = page.size
+        self.page.page = page.page
 
+        if (page.size > self.posts.length){
+          page.size = self.posts.length
+        }
+        self.pagePost.splice(0, self.pagePost.length)
+        var startPage = (page.page - 1) * page.size
+        for (var i = startPage; i < (startPage + page.size); i++){
+          self.pagePost.push(self.posts[i])
+        }
       },
       itemSelect: function (e) {
         var self = this
@@ -130,9 +149,19 @@
         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
         xhr.onload = function () {
           self.posts = JSON.parse(xhr.responseText)._embedded.posts
+
+          //최초 페이지
+          self.page.total =  self.posts.length
+          for (var i = 0; i < self.page.page * self.page.size; i++){
+            self.pagePost.push(self.posts[i])
+          }
+//          self.page.total= self.posts.length
+//          self.onPagination(self.page)
+
         }
         xhr.send()
-      }
+      },
+
 
     }
   };

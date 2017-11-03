@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.validation.constraints.Max;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @SpringBootApplication
@@ -38,6 +39,24 @@ public class BoardApplication implements CommandLineRunner {
 		postRepository.save(new Post("title3", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
 		postRepository.save(new Post("title4", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
 		postRepository.save(new Post("title5", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
+
+		postRepository.save(new Post("title6", "ㅁ;ㅣ아럼;이ㅏ러", "test1", reply));
+		postRepository.save(new Post("title7", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
+		postRepository.save(new Post("title8", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
+		postRepository.save(new Post("title9", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
+		postRepository.save(new Post("title10", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
+
+		postRepository.save(new Post("title11", "ㅁ;ㅣ아럼;이ㅏ러", "test1", reply));
+		postRepository.save(new Post("title12", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
+		postRepository.save(new Post("title13", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
+		postRepository.save(new Post("title14", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
+		postRepository.save(new Post("title15", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
+
+		postRepository.save(new Post("title16", "ㅁ;ㅣ아럼;이ㅏ러", "test1", reply));
+		postRepository.save(new Post("title17", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
+		postRepository.save(new Post("title18", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
+		postRepository.save(new Post("title19", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
+		postRepository.save(new Post("title20", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
 	}
 
 	public static void main(String[] args) {

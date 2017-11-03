@@ -36,15 +36,30 @@
 
         <md-card-area>
           <md-card-content>
-            <template v-for="item in reply">
+            <template v-for="(item, index) in reply">
               <md-input-container>
-                <label>Reply</label>
-                <md-textarea v-model="reply">
-                  {{item}}
+                <!--<label>Reply</label>-->
+                <!-- save, watch?? -->
+                <md-textarea v-model="reply[index].v" :readonly="reply[index].edit">
                 </md-textarea>
-                <!--<md-input v-model="post.contents" :readonly="readonly"></md-input>-->
+
+                <template>
+                  <md-button class="md-icon-button" v-if="reply[index].edit" @click="editReply(index)">
+                    <md-icon>edit</md-icon>
+                  </md-button>
+                  <md-button class="md-icon-button" v-else="reply[index].edit" @click="submitReply(index)">
+                    <md-icon>save</md-icon>
+                  </md-button>
+                </template>
+                <md-button class="md-icon-button" @click="deleteReply(index)">
+                  <md-icon>delete</md-icon>
+                </md-button>
+
               </md-input-container>
             </template>
+
+            <write-form-reply @refreshDetailBoard="initReply"></write-form-reply>
+
           </md-card-content>
         </md-card-area>
 
@@ -63,6 +78,7 @@
   import MdCardHeaderText from "../../node_modules/vue-material/src/components/mdCard/mdCardHeaderText.vue";
   import MdCardActions from "../../node_modules/vue-material/src/components/mdCard/mdCardActions.vue";
   import MdCardArea from "../../node_modules/vue-material/src/components/mdCard/mdCardArea.vue";
+  import WriteFormReply from "./WriteFormReply.vue"
 
   export default {
     components: {
@@ -72,7 +88,8 @@
       MdCardHeader,
       MdCard,
       MdLayout,
-      MdButton
+      MdButton,
+      WriteFormReply
     },
     name: 'detailpost',
     data() {
@@ -81,28 +98,62 @@
         post: {},
         readonly: true,
         editMode: true,
-        reply: {}
+        reply: []
       }
     },
     created: function () {
-      var xhr = new XMLHttpRequest()
-
       var self = this
-      var id = self.$route.params.id
-      xhr.open('GET', 'http://localhost:8080/post/id/' + id)
-      xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
-      xhr.onload = function () {
-        var post = JSON.parse(xhr.responseText)
-        self.post = post
-        self.reply = JSON.stringify(self.post.reply)
-        console.log(self.post)
-        console.log(self.reply)
-
-
-      }
-      xhr.send()
+      self.initDetailPost()
     },
     methods: {
+      initDetailPost: function () {
+        var xhr = new XMLHttpRequest()
+
+        var self = this
+        var id = self.$route.params.id
+        xhr.open('GET', 'http://localhost:8080/post/id/' + id)
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+        xhr.onload = function () {
+          var post = JSON.parse(xhr.responseText)
+          self.post = post
+
+          for (var i = 0; i < self.post.reply.length; i++){
+            self.reply.push({"v": self.post.reply[i], "edit": true})
+          }
+        }
+        xhr.send()
+      },
+      initReply: function () {
+        var xhr = new XMLHttpRequest()
+
+        var self = this
+        var id = self.$route.params.id
+        xhr.open('GET', 'http://localhost:8080/post/id/' + id)
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+        xhr.onload = function () {
+          var post = JSON.parse(xhr.responseText)
+          self.post = post
+
+          self.reply.push({"v": self.post.reply[self.post.reply.length - 1], "edit": true})
+        }
+        xhr.send()
+      },
+      initReplyDelete: function (idx) {
+        var xhr = new XMLHttpRequest()
+
+        var self = this
+        var id = self.$route.params.id
+        xhr.open('GET', 'http://localhost:8080/post/id/' + id)
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+        xhr.onload = function () {
+          var post = JSON.parse(xhr.responseText)
+          self.post = post
+
+          self.reply.splice(idx, 1) //idx위치의 1개 삭제
+        }
+        xhr.send()
+      }
+      ,
       toList: function () {
         var self = this
         self.$router.push({
@@ -116,7 +167,10 @@
         var id = self.$route.params.id
         xhr.open('PUT', 'http://localhost:8080/post/put')
         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+
         var jsonData = JSON.stringify(self.post)
+
+        console.log(jsonData)
 
         xhr.onload = function () {
           var post = JSON.parse(xhr.responseText)
@@ -131,6 +185,43 @@
         var self = this
         self.readonly = false
         self.editMode = false
+      },
+      toObj: function (arr) {
+        var rv = {};
+        for (var i = 0; i < arr.length; ++i)
+          rv[i] = arr[i]
+        return rv
+      },
+      editReply: function (index) {
+
+        var self = this
+        self.reply[index].edit = false
+      },
+      submitReply: function (index) {
+
+        var self = this
+        self.reply[index].edit = true
+//        self.post.reply = self.reply //기존의 post.reply를 이 vue에서 변경한 reply배열 객체로 변경해 버린다
+        //front 처리
+        for(var i= 0; i< self.reply.length; i++){
+          self.post.reply[i] = self.reply[i].v
+        }
+
+        self.submit();
+      },
+      deleteReply: function (index) {
+        var self = this
+        var xhr = new XMLHttpRequest()
+
+        var id = self.$route.params.id
+        var jsonData = JSON.stringify({id: id, replyIdx: index})
+
+        xhr.open('DELETE', 'http://localhost:8080/post/reply/delete')
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+        xhr.onload = function () {
+          self.initReplyDelete(index)
+        }
+        xhr.send(jsonData)
       }
     }
   }

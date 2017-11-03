@@ -1,14 +1,10 @@
 <template>
   <div>
   <md-dialog md-open-from="#fab" md-close-to="#fab" ref="dialog2">
-    <md-dialog-title>Create new write</md-dialog-title>
+    <md-dialog-title>Create new Reply</md-dialog-title>
 
     <md-dialog-content>
       <form>
-        <md-input-container>
-          <label>title</label>
-          <md-input v-model="title"></md-input>
-        </md-input-container>
         <md-input-container>
           <label>contents</label>
           <md-textarea v-model="contents"></md-textarea>
@@ -22,7 +18,7 @@
     </md-dialog-actions>
   </md-dialog>
 
-  <md-button class="md-icon-button" id="fab" @click.native="openDialog('dialog2')">
+  <md-button class="md-fab" id="fab" @click.native="openDialog('dialog2')">
     <md-icon>message</md-icon>
   </md-button>
   </div>
@@ -33,7 +29,6 @@
     name: 'writeform',
     data: () => ({
 //      form: {title: String, contents: String}
-      title: '',
       contents: ''
     }),
     methods: {
@@ -52,10 +47,11 @@
       writeDialog(ref) {
         var xhr = new XMLHttpRequest()
         var self = this
-        xhr.open('POST', "http://localhost:8080/post/write");
+        xhr.open('POST', "http://localhost:8080/post/write/reply");
         xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
 
-        var jsonData = JSON.stringify({title: self.title, contents: self.contents, authorId: "auid"})
+        var id = self.$route.params.id
+        var jsonData = JSON.stringify({id: id, reply: self.contents})
 
 //        console.log(jsonData)
 
@@ -64,7 +60,7 @@
 //          self.$router.push({
 //            path: '/'
 //          })
-          self.$emit('refreshBoard')
+          self.$emit('refreshDetailBoard')
         }
         xhr.send(jsonData)
 
