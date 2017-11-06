@@ -47,16 +47,7 @@ public class BoardApplication implements CommandLineRunner {
 		postRepository.save(new Post("title10", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
 
 		postRepository.save(new Post("title11", "ㅁ;ㅣ아럼;이ㅏ러", "test1", reply));
-		postRepository.save(new Post("title12", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
-		postRepository.save(new Post("title13", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
-		postRepository.save(new Post("title14", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
-		postRepository.save(new Post("title15", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
 
-		postRepository.save(new Post("title16", "ㅁ;ㅣ아럼;이ㅏ러", "test1", reply));
-		postRepository.save(new Post("title17", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
-		postRepository.save(new Post("title18", "ㅁ;ㅣ아럼;이ㅏ러", "test2"));
-		postRepository.save(new Post("title19", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
-		postRepository.save(new Post("title20", "ㅁ;ㅣ아럼;이ㅏ러", "test1"));
 	}
 
 	public static void main(String[] args) {

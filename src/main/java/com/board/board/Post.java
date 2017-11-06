@@ -1,6 +1,7 @@
 package com.board.board;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -16,6 +17,7 @@ public class Post {
         this.title = title;
         this.contents = contents;
         this.authorId = authorId;
+        this.reply = new ArrayList<>();
     }
 
     public Post(String title, String contents, String authorId, Collection<String> reply) {

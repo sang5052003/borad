@@ -77,7 +77,7 @@
       pagePost: [],
       page: {
         size: "5",
-        total: "10",
+        total: "30",
         page: "1",
         label: "Rows",
         separator: "of" //?
@@ -97,17 +97,37 @@
       },
       onPagination: function (page) {
         var self = this
+
+        console.log('page')
+        console.log(page)
+
+        //전체 데이터 보다 클경우 (page.size)
+        if (page.size >= self.posts.length){
+          //1page
+          page.page = 1
+        }
+
+        //cur page 갱신
+        //시작인덱스가 전체데이터에서 몇 번째 페이지에 있는가(size에 따라서)
+        var pageCount = self.posts.length / page.size //전체 페이지 갯수
+        var prevPageSize = self.page.size
+        var startIdx = (page.page - 1) * prevPageSize //시작인덱스
+        var curPage = startIdx / page.size + 1
+
+        //변경된 page, size 저장
+        self.page.page = curPage
         self.page.size = page.size
-        self.page.page = page.page
 
         if (page.size > self.posts.length){
           page.size = self.posts.length
         }
-        self.pagePost.splice(0, self.pagePost.length)
-        var startPage = (page.page - 1) * page.size
-        for (var i = startPage; i < (startPage + page.size); i++){
-          self.pagePost.push(self.posts[i])
-        }
+        self.pagePost.splice(0, self.pagePost.length) //pagePost 비우기
+
+        self.displayList(startIdx, startIdx + page.size)
+//        for (var i = startIdx; i < (startIdx + page.size); i++){
+//          if (self.posts[i] === undefined) break
+//          self.pagePost.push(self.posts[i])
+//        }
       },
       itemSelect: function (e) {
         var self = this
@@ -118,25 +138,25 @@
 //          path: self.$route.query.redirect
         })
       },
-      deletePost: function (id) {
+      deletePost: function (path) {
         var self = this
 //        self.checkList
         var xhr = new XMLHttpRequest()
-        xhr.open('DELETE', 'http://localhost:8080/post/' + id)
+        xhr.open('DELETE', path)
         xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
         xhr.onload = function () {
           self.initList()
         }
         xhr.send()
       },
-      deleteClick: function () { //여러번 통신
+      deleteClick: function () { //여러번 통신해서 지우기(checked 데이터)
         //id valid
         var self = this
 //        self.checkList
 
+        //자를때 잘못자름(무조건 한자리로 생각)
         for (var i = 0; i < self.checkList.length; i++){
           var path = self.checkList[i]._links.post.href
-          path = path.charAt(path.length - 1)
           self.deletePost(path)
         }
       },
@@ -150,17 +170,39 @@
         xhr.onload = function () {
           self.posts = JSON.parse(xhr.responseText)._embedded.posts
 
+          //뒤집기..
+          self.posts.reverse()
+
           //최초 페이지
-          self.page.total =  self.posts.length
-          for (var i = 0; i < self.page.page * self.page.size; i++){
-            self.pagePost.push(self.posts[i])
-          }
+          self.page.total =  self.posts.length //20개?
+          console.log('total '+self.page.total)
+          self.page.page = 1
+          self.pagePost.splice(0, self.pagePost.length) //pagePost 비우기 (시작인덱스, 갯수)
+
+          //뒤에서 부터 나오도록
+          self.displayList(0, self.page.page * self.page.size)
+
+
+//          for (var i = 0; i < self.page.page * self.page.size; i++){
+//            self.pagePost.push(self.posts[i])
+//          }
 //          self.page.total= self.posts.length
 //          self.onPagination(self.page)
 
         }
         xhr.send()
       },
+      displayList: function (startIdx, endIdx) {
+        var self = this
+
+        console.log(startIdx)
+        console.log(endIdx)
+
+        for (var i = startIdx; i < endIdx; i++){
+          if (self.posts[i] === undefined) break
+          self.pagePost.push(self.posts[i])
+        }
+      }
 
 
     }
